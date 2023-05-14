@@ -4,7 +4,86 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+<h1>Items</h1>
+
+<table id="itemsTable">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<button id="createButton">Create Item</button>
+<button id="deleteButton">Delete Item</button>
+<button id="updateButton">Update Item</button>
+<button id="getAllButton">Get All Items</button>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $("#createButton").click(function () {
+                var item = { /* item data */ };
+                $.ajax({
+                    type: "POST",
+                    url: "/Item",
+                    data: JSON.stringify(item),
+                    contentType: "application/json",
+                    success: function (data) {
+                        // handle success
+                    }
+                });
+            });
+
+            $("#deleteButton").click(function () {
+                var id = /* id of the item to delete */;
+                $.ajax({
+                    type: "DELETE",
+                    url: "/Item/" + id,
+                    success: function (data) {
+                        // handle success
+                    }
+                });
+            });
+
+            $("#updateButton").click(function () {
+                var id = /* id of the item to update */;
+                var item = { /* updated item data */ };
+                $.ajax({
+                    type: "PUT",
+                    url: "/Item/" + id,
+                    data: JSON.stringify(item),
+                    contentType: "application/json",
+                    success: function (data) {
+                        // handle success
+                    }
+                });
+            });
+
+            $(function () {
+                $("#getAllButton").click(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Item",
+                        success: function (data) {
+                            // handle success
+                            var items = data;
+                            var tableBody = $("#itemsTable tbody");
+                            tableBody.empty();
+                            items.forEach(function (item) {
+                                var row = $("<tr></tr>");
+                                row.append($("<td></td>").text(item.id));
+                                row.append($("<td></td>").text(item.name));
+                                row.append($("<td></td>").text(item.description));
+                                tableBody.append(row);
+                            });
+                        }
+                    });
+                });
+            });
+    </script>
+}
